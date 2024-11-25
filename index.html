@@ -141,7 +141,7 @@
             let b = getRandomCoefficient();
             let c = getRandomCoefficient();
             let d = getRandomCoefficient();
-            return `${a === 0 ? '' : a + 'x^3'} ${b === 0 ? '' : (b < 0 ? '' : '+') + b + 'x^2'} ${c === 0 ? '' : (c < 0 ? '' : '+') + c + 'x'} ${d === 0 ? '' : (d < 0 ? '' : '+') + d}`;
+            return `${a === 0 ? '' : a + 'x^3'} ${b === 0 ? '' : (b < 0 ? '' : a===0 ? '':'+') + b + 'x^2'} ${c === 0 ? '' : (c < 0 ? '' : a===0&&b===0 ? '':'+') + c + 'x'} ${d === 0 ? '' : (d < 0 ? '' : '+') + d}`;
         }
 
         function gcd(a, b) {
@@ -235,7 +235,7 @@
             document.getElementById("problem").innerHTML = problemHtml;
 
             const optionsHtml = answerArray.map((answer, index) =>
-                `<div class="option"><button onclick="checkAnswer('${answer}', '${correctAnswer}')">${index + 1}. \\[${answer}\\]</button></div>`
+                `<div class="option"><button onclick="checkAnswer('${answer}', '${correctAnswer}','${polynomial}')">${index + 1}. \\[${answer}\\]</button></div>`
             ).join('');
             document.getElementById("options").innerHTML = optionsHtml;
 
@@ -244,7 +244,7 @@
             MathJax.typeset();
         }
 
-        function checkAnswer(selected, correct) {
+        function checkAnswer(selected, correct,polynomial) {
             let resultMessage;
             document.getElementById("quiz-screen").style.display = 'none'; // クイズ画面を隠す
             if (selected === correct) {
@@ -254,15 +254,16 @@
                     // 連続正解数が5に達した場合、終了画面を表示
                     stoptime = timeLeft;
                     timeLeft = 0;
-                    document.getElementById("stoptime").innerText = stoptime;
+                    document.getElementById("stoptime").innerHTML = stoptime;
                     document.getElementById("end-screen").style.display = "block";
                     return;
                 }
             } else {
-                resultMessage = '不正解。正しい答えは: $$' + correct + '$$ ';
+                resultMessage = '不正解。$$'+polynomial+'$$を積分すると: $$' + correct + '$$ ';
                 point = 0; // 不正解でリセット
             }
 
+            resultMessage = resultMessage.replace(/\f/g, '\\f');
             document.getElementById("result-message").innerHTML = resultMessage;
             document.getElementById("result-screen").style.display = 'block'; // 結果画面を表示
             MathJax.typeset();
