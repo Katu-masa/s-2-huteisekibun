@@ -129,6 +129,7 @@
         }
 
         function startTimer() {
+            clearInterval(timerInterval);  // 既存のタイマーをクリア
             timeLeft = 0;
             timerInterval = setInterval(() => {
                 timeLeft++;
